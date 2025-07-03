@@ -532,8 +532,8 @@ MESSAGES.setdefault("en", {}).update({
 })
 
 MESSAGES.setdefault("ru", {}).update({
-    "no_chats": "У вас пока нет переписок.",
-    "your_dialogs": "Сообщения\n",
+    "no_chats": "📭 У вас пока нет сообщений !",
+    "your_dialogs": "🗨️ Сообщения\n",
     "wrong_data_format": "Неправильный формат данных.",
     "not_your_session": "Это не ваша сессия.",
     "no_access": "У вас нет доступа к этому диалогу.",
@@ -546,8 +546,8 @@ MESSAGES.setdefault("ru", {}).update({
 
 })
 MESSAGES.setdefault("am", {}).update({
-    "no_chats": "Դեռ չեք սկսել հաղորդագրություններ:",
-    "your_dialogs": "Հաղորդագրություններ\n",
+    "no_chats": "📭 Դուք դեռ չունեք հաղորդագրություններ !",
+    "your_dialogs": "🗨️ Հաղորդագրություններ\n",
     "wrong_data_format": "Տվյալների սխալ ձևաչափ:",
     "not_your_session": "Սա ձեր սեսիան չէ:",
     "no_access": "Դուք չունեք մուտք այս երկխոսություն:",
@@ -559,8 +559,8 @@ MESSAGES.setdefault("am", {}).update({
     "next": "Հաջորդ",
 })
 MESSAGES.setdefault("en", {}).update({
-    "no_chats": "You have no chats yet.",
-    "your_dialogs": "Messages\n",
+    "no_chats": "📭 You have no messages yet !",
+    "your_dialogs": "🗨️ Messages\n",
     "wrong_data_format": "Wrong data format.",
     "not_your_session": "This is not your session.",
     "no_access": "You don't have access to this dialog.",

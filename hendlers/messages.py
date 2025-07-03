@@ -36,7 +36,7 @@ async def show_user_pairs(msg: types.Message , state: FSMContext):
     pairs = await get_user_pairs(user_id)
 
     if not pairs:
-        await msg.answer(t("no_chats", locale=lang))
+        await msg.answer(t("no_chats", lang))
         return
 
     pairs_with_names = []
