@@ -9,6 +9,7 @@ from .search import router as search_router
 from .chat import router as chat_router
 from .blocks import router as blocks_router
 from .language import router as language_router
+from .messages import router as messages_router
 
 
 # Один объект, в котором собраны все маршруты
@@ -22,6 +23,7 @@ all_routers.include_router(search_router)
 all_routers.include_router(chat_router)
 all_routers.include_router(blocks_router)
 all_routers.include_router(language_router)
+all_routers.include_router(messages_router)
 
 
 # Чтобы import * работал

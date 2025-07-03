@@ -34,7 +34,6 @@ MESSAGES = {
             "🧑 Имя: {name}\n"
             "📅 Возраст: {age}\n"
             "🌆 Город: {location}\n"
-            "📞 Телефон: +{numbers}"
         ),
         "btn_profile": "👤 Профиль",
         "btn_search": "🔍 Поиск",
@@ -81,7 +80,6 @@ MESSAGES = {
             "🧑 Անուն: {name}\n"
             "📅 Տարիք: {age}\n"
             "🌆 Քաղաք: {location}\n"
-            "📞 Հեռախոս: +{numbers}"
         ),
         "btn_profile": "👤 Պրոֆիլ",
         "btn_search": "🔍 Գտնել",
@@ -115,7 +113,6 @@ MESSAGES = {
             "🧑 Name: {name}\n"
             "📅 Age: {age}\n"
             "🌆 City: {location}\n"
-            "📞 Phone: +{numbers}"
         ),
         "ask_gender": "👣 Step 1: Select your gender 🧬",
         "ask_name": "👣 Step 2: What is your name?",
@@ -156,7 +153,6 @@ MESSAGES.setdefault("ru", {}).update({
         "🧑 Имя: {name}\n"
         "📅 Возраст: {age}\n"
         "🌆 Город: {location}\n"
-        "📞 Телефон: +{phone}"
     ),
 })
 
@@ -168,7 +164,6 @@ MESSAGES.setdefault("am", {}).update({
         "🧑 Անուն: {name}\n"
         "📅 Տարիք: {age}\n"
         "🌆 Քաղաք: {location}\n"
-        "📞 Հեռախոս: +{phone}"
     ),
 })
 
@@ -181,7 +176,6 @@ MESSAGES.setdefault("en", {}).update({
         "🧑 Name: {name}\n"
         "📅 Age: {age}\n"
         "🌆 City: {location}\n"
-        "📞 Phone: +{phone}"
     ),
 })
 
@@ -494,7 +488,6 @@ MESSAGES.setdefault("en", {}).update({
     "answer_cancelled": "✅ Cancelled",
 })
 
-
 MESSAGES.setdefault("ru", {}).update({
     "set_reg_lang": "✅ Язык успешно изменён!",
 })
@@ -538,11 +531,54 @@ MESSAGES.setdefault("en", {}).update({
     "err_video_too_large": "❗ Video is too large; maximum size is {size_mb} MB."
 })
 
+MESSAGES.setdefault("ru", {}).update({
+    "no_chats": "У вас пока нет переписок.",
+    "your_dialogs": "Сообщения\n",
+    "wrong_data_format": "Неправильный формат данных.",
+    "not_your_session": "Это не ваша сессия.",
+    "no_access": "У вас нет доступа к этому диалогу.",
+    "no_messages": "Сообщений нет.",
+    "dialog_with": "Диалог с <b>{name}</b>",
+    "media_btn_next": "Далее",
+    "media_btn_back": "Назад",
+    "dialogs": "Диалоги",
+    "next": "Далее",
+
+})
+MESSAGES.setdefault("am", {}).update({
+    "no_chats": "Դեռ չեք սկսել հաղորդագրություններ:",
+    "your_dialogs": "Հաղորդագրություններ\n",
+    "wrong_data_format": "Տվյալների սխալ ձևաչափ:",
+    "not_your_session": "Սա ձեր սեսիան չէ:",
+    "no_access": "Դուք չունեք մուտք այս երկխոսություն:",
+    "no_messages": "Հաղորդագրություններ չկան:",
+    "dialog_with": "Երկխոսություն <b>{name}</b> ի - հետ",
+    "media_btn_next": "Հաջորդը",
+    "media_btn_back": "Նախորդը",
+    "dialogs": "Զրույցներ",
+    "next": "Հաջորդ",
+})
+MESSAGES.setdefault("en", {}).update({
+    "no_chats": "You have no chats yet.",
+    "your_dialogs": "Messages\n",
+    "wrong_data_format": "Wrong data format.",
+    "not_your_session": "This is not your session.",
+    "no_access": "You don't have access to this dialog.",
+    "no_messages": "No messages.",
+    "dialog_with": "Dialog with <b>{name}</b>",
+    "media_btn_next": "Next",
+    "media_btn_back": "Back",
+    "dialogs": "Dialogs",
+    "next": "Next",
+
+})
+
 COMMANDS = {
     "ru": [
         BotCommand(command="start", description="🚀 Запустить бота"),
         BotCommand(command="profile", description="👤 Мой профиль"),
         BotCommand(command="search", description="🔍 Найти собеседника"),
+        BotCommand(command="my_chats", description="📩 Чаты"),
         BotCommand(command="block_list", description="🚫 блок-лист"),
         BotCommand(command="language", description="🌐 Сменить язык"),
         BotCommand(command="feedback", description="✉️ Обратная связь"),
@@ -551,6 +587,7 @@ COMMANDS = {
         BotCommand(command="start", description="🚀 Start the bot"),
         BotCommand(command="profile", description="👤 Show my profile"),
         BotCommand(command="search", description="🔍 Find a partner"),
+        BotCommand(command="my_chats", description="📩 Chats"),
         BotCommand(command="block_list", description="🚫 block-list"),
         BotCommand(command="language", description="🌐 Change language"),
         BotCommand(command="feedback", description="✉️ Feedback"),
@@ -559,12 +596,12 @@ COMMANDS = {
         BotCommand(command="start", description="🚀 Սկսել բոտը"),
         BotCommand(command="profile", description="👤 Իմ Պրոֆիլ"),
         BotCommand(command="search", description="🔍 Գտնել զրուցակից"),
+        BotCommand(command="my_chats", description="📩 Զրույցներ"),
         BotCommand(command="block_list", description="🚫 Արգելափակվածներ"),
         BotCommand(command="language", description="🌐 Փոխել լեզուն"),
         BotCommand(command="feedback", description="✉️ Հետադարձ կապ"),
     ],
 }
-
 
 
 def t(key: str, lang: str, **kwargs) -> str:

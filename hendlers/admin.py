@@ -314,7 +314,7 @@ async def show_pair_dialog(cb: CallbackQuery, **_):
 
     await safe_edit_text(
         cb.message,
-        f"Диалог <b>{u1}</b> ↔ <b>{u2}</b>\n\n{text}",
+        f"Диалог <b>{u1}</b>\n\n{text}",
         parse_mode="HTML",
         reply_markup=kb_pairs
     )

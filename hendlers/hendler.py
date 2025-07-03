@@ -117,7 +117,7 @@ async def save_name(message: Message, state: FSMContext):
     lang = data.get("language", "ru")
     text = message.text.strip()
 
-    if text.isdigit() or len(text) <= 3:
+    if text.isdigit() or len(text) < 2:
         return await message.answer(t("err_name_digit", lang), parse_mode="HTML")
     if not re.fullmatch(r"^[A-Za-zА-Яа-яЁёԱ-Ֆա-ֆ \-]+$", text):
         return await message.answer(t("err_name_format", lang), parse_mode="HTML")
@@ -208,7 +208,7 @@ async def handle_location_text(message: Message, state: FSMContext):
     city = message.text.strip()
 
     # 1) Не цифры и длина минимум 2
-    if city.isdigit() or len(city) <= 3:
+    if city.isdigit() or len(city) < 2:
         return await message.answer(
             t("err_location_numeric", lang),
             reply_markup=kb.location_kb(lang) , parse_mode="HTML"
@@ -253,7 +253,7 @@ async def handle_photo(message: Message, state: FSMContext):
     buf = BytesIO()
     await message.bot.download_file(file_obj.file_path, destination=buf)
     raw_bytes = buf.getvalue()
-    squared = await crop_square_bytes(raw_bytes, size=320, quality=75)
+    squared = await crop_square_bytes(raw_bytes, size=800)
 
     await state.update_data(photo_data=squared)
     await state.set_state(Reg.numbers)
@@ -308,7 +308,6 @@ async def on_contact(message: Message, state: FSMContext):
         name=data["name"],
         age=data["age"],
         location=data["location"],
-        numbers=data["numbers"]
     )
     await message.answer_photo(
         types.BufferedInputFile(buf2.getvalue(), filename="profile.jpg"),

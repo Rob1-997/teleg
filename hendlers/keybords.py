@@ -1,6 +1,6 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from database import is_admin , get_profile , is_blocked , is_banned
+from database import is_admin , get_profile , is_blocked , is_banned , get_user_lang
 from utils.i18n import t
 
 
@@ -498,3 +498,77 @@ def like_dislike_kb(target_id: int, current: str | None) -> InlineKeyboardMarkup
         InlineKeyboardButton(text=like_text,    callback_data=f"reaction_like_{target_id}"),
         InlineKeyboardButton(text=dislike_text, callback_data=f"reaction_dislike_{target_id}")
     ]])
+
+
+
+
+
+async def user_dialog_pairs_kb(
+    pairs: list[tuple[int, str, int, str]],
+    current_user_id: int,
+    media_buttons: list[InlineKeyboardButton] | None = None,
+    media_offset: int = 0,
+    dialogs_offset: int = 0,
+    media_page_size: int = 5,
+    dialogs_page_size: int = 8,
+) -> InlineKeyboardMarkup:
+    keyboard: list[list[InlineKeyboardButton]] = []
+    lang = await get_user_lang(current_user_id)
+
+    # --- Медиа кнопки и пагинация
+    if media_buttons:
+        media_page = media_buttons[media_offset:media_offset + media_page_size]
+        if media_page:
+            keyboard.append(media_page)
+
+        media_nav = []
+        if media_offset > 0:
+
+            media_nav.append(InlineKeyboardButton(
+                text=f"◀️ {t('media_btn_back', lang)}",
+                callback_data=f"media_nav_{media_offset - media_page_size}_do_{dialogs_offset}"
+            ))
+        if media_offset + media_page_size < len(media_buttons):
+            media_nav.append(InlineKeyboardButton(
+                text=f"{t('media_btn_next', lang)} ▶️",
+                callback_data=f"media_nav_{media_offset + media_page_size}_do_{dialogs_offset}"
+            ))
+
+        if media_nav:
+            keyboard.append(media_nav)
+
+    # --- Диалоги и пагинация
+    unique_pairs = {}
+    for u1, name1, u2, name2 in pairs:
+        key = tuple(sorted((u1, u2)))
+        if key not in unique_pairs:
+            unique_pairs[key] = (name1, name2) if key[0] == u1 else (name2, name1)
+
+    dialog_keys = list(unique_pairs.items())
+    dialog_page = dialog_keys[dialogs_offset:dialogs_offset + dialogs_page_size]
+
+    for (id1, id2), (n1, n2) in dialog_page:
+        keyboard.append([
+            InlineKeyboardButton(
+                text=f"👤 {n1} ",
+                callback_data=f"user_pair_{id1}_{id2}_uid_{current_user_id}"
+            )
+        ])
+
+    dialog_nav = []
+    if dialogs_offset > 0:
+        dialog_nav.append(InlineKeyboardButton(
+            text=f"◀️ {t('dialogs', lang)}",
+            callback_data=f"dialogs_nav_{dialogs_offset - dialogs_page_size}_mo_{media_offset}"
+        ))
+    if dialogs_offset + dialogs_page_size < len(dialog_keys):
+        dialog_nav.append(InlineKeyboardButton(
+            text=f"▶️ {t('dialogs', lang)}",
+            callback_data=f"dialogs_nav_{dialogs_offset + dialogs_page_size}_mo_{media_offset}"
+        ))
+    if dialog_nav:
+        keyboard.append(dialog_nav)
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+

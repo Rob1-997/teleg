@@ -221,27 +221,31 @@ async def set_user_language(tg_id: int, lang: str):
 
 async def get_candidates_list(my_gender: str, viewer_id: int) -> list[int]:
     """Вернёт список telegram_id кандидатов противоположного пола,
-       сначала из вашего города, затем остальных в random-порядке."""
-    # 1) Узнаём город смотрящего
+       сначала из вашего города, затем остальных в random-порядке,
+       исключая админов (по таблице admins)."""
+
     me = await pool.fetchrow(
         "SELECT location FROM profiles WHERE telegram_id = $1",
         viewer_id
     )
     my_city = me["location"] if me else None
 
-    # 2) Получаем all telegram_id
     rows = await pool.fetch(
         """
         SELECT telegram_id
         FROM profiles
         WHERE gender <> $1
           AND telegram_id <> $2
+          AND telegram_id NOT IN (
+              SELECT telegram_id FROM admins WHERE is_admin = true
+          )
         ORDER BY
           (location = $3) DESC,
           random()
         """,
         my_gender, viewer_id, my_city
     )
+
     return [r["telegram_id"] for r in rows]
 
 async def get_profile_by_id(telegram_id: int) -> asyncpg.Record | None:
@@ -619,3 +623,46 @@ async def get_reaction_record(user_id: int, target_id: int) -> asyncpg.Record | 
             """,
             user_id, target_id
         )
+
+
+async def get_user_pairs(user_id: int):
+    query = """
+        SELECT sender_id, receiver_id
+        FROM messages
+        WHERE sender_id = $1 OR receiver_id = $1
+        GROUP BY sender_id, receiver_id
+    """
+    return await pool.fetch(query, user_id)
+
+async def get_message_by_id(message_id: int) -> dict | None:
+    row = await pool.fetchrow(
+        "SELECT id, sender_id, body, sent_at FROM messages WHERE id = $1",
+        message_id
+    )
+    return dict(row) if row else None
+
+async def get_pairs_with_names(pairs: list[tuple[int, int]]):
+    result = []
+    for u1, u2 in pairs:
+        name1 = await get_display_name(u1) or str(u1)
+        name2 = await get_display_name(u2) or str(u2)
+        result.append((u1, name1, u2, name2))
+    return result
+
+
+async def get_user_lang(tg_id: int) -> str:
+    async with pool.acquire() as conn:
+        row = await conn.fetchrow(
+            """
+            SELECT lang
+            FROM profiles
+            WHERE telegram_id = $1
+            """,
+            tg_id
+        )
+        if row and row.get("lang"):
+            return row["lang"]
+        else:
+            return "ru"
+
+

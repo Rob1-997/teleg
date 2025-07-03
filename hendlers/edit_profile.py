@@ -59,7 +59,6 @@ async def cmd_profile(msg: Message, state: FSMContext):
         name     = row["name"],
         age      = row["age"],
         location = row["location"],
-        phone    = row["phone"],
     )
 
     buffer = BytesIO(row["photo_data"])
@@ -143,7 +142,7 @@ async def save_new_name(msg: Message, state: FSMContext):
         return await cmd_set_language(msg, state)
 
     # 1) Проверяем — не цифры и не слишком короткое
-    if name.isdigit() or len(name) <= 3:
+    if name.isdigit() or len(name) < 2:
         return await msg.answer(
             t("err_edit_name_invalid", lang),parse_mode="HTML"
         )
@@ -303,7 +302,7 @@ async def edit_location_text(msg: Message, state: FSMContext):
         await state.clear()
         return await cmd_set_language(msg, state)
     # Ваша валидация: минимум 2 символа и только буквы, пробел, дефис
-    if city.isdigit() or len(city) <= 2:
+    if city.isdigit() or len(city) < 2:
         return await msg.answer(
             t("err_edit_city_numeric", lang),
             reply_markup=kb.location_kb(lang) , parse_mode="HTML"
@@ -347,7 +346,7 @@ async def save_new_photo(msg: Message, state: FSMContext):
     raw = buf.getvalue()
 
     # Обрезаем и меняем размер
-    squared = await crop_square_bytes(raw, size=320)
+    squared = await crop_square_bytes(raw, size=800)
 
     # Сохраняем в БД
     await update_profile_field(msg.from_user.id, "photo_data", squared)
