@@ -30,11 +30,11 @@ class Reg(StatesGroup):
     numbers = State()
     photo = State()
 
-async def menu_for(user_id: int):
-    if await is_admin(user_id):
-        return kb.admin_menu
-    row = await get_profile(user_id)
-    lang = row["lang"] if row and row.get("lang") else "ru"
+# async def menu_for(user_id: int):
+#     if await is_admin(user_id):
+#         return kb.admin_menu
+#     row = await get_profile(user_id)
+#     lang = row["lang"] if row and row.get("lang") else "ru"
 
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
@@ -50,9 +50,9 @@ async def cmd_start(message: Message, state: FSMContext):
             commands=COMMANDS[lang],
             scope=BotCommandScopeChat(chat_id=user_id)
         )
-        inline_menu = await menu_for(user_id)
+
         text = t("welcome_back", lang, name=profile.get("name"))
-        return await message.answer(text, reply_markup=inline_menu , parse_mode='HTML')
+        return await message.answer(text , parse_mode='HTML')
 
     # иначе — предложить выбрать язык
     await state.set_state(Reg.language)

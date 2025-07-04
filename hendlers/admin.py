@@ -1,7 +1,7 @@
 import os
 import html
 from aiogram import Router, F, types
-from aiogram.types import Message ,CallbackQuery , InlineKeyboardButton , InlineKeyboardMarkup , BufferedInputFile
+from aiogram.types import ReplyKeyboardRemove ,CallbackQuery , InlineKeyboardButton , InlineKeyboardMarkup , BufferedInputFile
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.exceptions import TelegramBadRequest
@@ -64,6 +64,14 @@ async def ask_pass(msg: types.Message, state: FSMContext):
         parse_mode="HTML"
     )
 
+@router.message(F.text == "/cancel")
+async def cancel(msg: types.Message, state: FSMContext):
+    await state.clear()
+    user_id = msg.from_user.id
+    row = await get_profile(user_id)
+    lang = row.get("lang") or "ru"
+    await msg.answer(t('btn_cancel' , lang))
+
 @router.message(F.text == "/answer_cancel")
 async def cancel(msg: types.Message, state: FSMContext):
     user_id = msg.from_user.id
@@ -79,7 +87,7 @@ async def check_pass(msg: types.Message, state: FSMContext):
         await set_admin(msg.from_user.id, True)
         await state.clear()
         return await msg.answer("✅ Пароль верный. Админ-меню доступно.", reply_markup=kb.admin_menu)
-    await msg.answer("❌ Неверный пароль. Повторите или напишите /cancel.")
+    await msg.answer("❌ Неверный пароль. Повторите или напишите /cancel")
 
 # ——— фильтр, который пускает только админов ———
 
@@ -171,8 +179,9 @@ async def logout_cmd(msg: types.Message):
     await set_admin(msg.from_user.id, False)          # снимаем флаг
     await msg.answer(
         "Режим админа выключен.",
-        reply_markup=await kb.menu_for(msg.from_user.id) # вернём нужное меню
+        reply_markup=ReplyKeyboardRemove()
     )
+
 @router.message(F.text == "⬇️ Экспорт CSV")
 @admin_only
 async def export_csv(msg: types.Message, **_):

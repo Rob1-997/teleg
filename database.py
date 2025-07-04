@@ -236,8 +236,11 @@ async def get_candidates_list(my_gender: str, viewer_id: int) -> list[int]:
         FROM profiles
         WHERE gender <> $1
           AND telegram_id <> $2
-          AND telegram_id NOT IN (
-              SELECT telegram_id FROM admins WHERE is_admin = true
+          AND NOT EXISTS (
+              SELECT 1
+              FROM admins a
+              WHERE a.tg_id::bigint = profiles.telegram_id
+                AND a.is_admin = true
           )
         ORDER BY
           (location = $3) DESC,

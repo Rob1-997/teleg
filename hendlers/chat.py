@@ -419,7 +419,7 @@ async def unblock_user(cb: CallbackQuery, state: FSMContext):
 
         await cb.message.answer(
             t("menu_title", lang),
-            reply_markup=await kb.menu_for(user_id)
+
         )
     else:
         # Обновляем клавиатуру списка
